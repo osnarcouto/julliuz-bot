@@ -37,7 +37,9 @@ jobs:
           TELEGRAM_BOT_TOKEN: fake
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
           REDIS_URL: redis://localhost:6379/0
+          PYTHONPATH: .
         run: pytest tests/
+        
 
       - name: Deploy no servidor via SSH
         uses: appleboy/ssh-action@master
