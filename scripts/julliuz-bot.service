@@ -1,0 +1,33 @@
+[Unit]
+Description=Julliuz Bot Service
+After=network.target postgresql.service redis.service
+
+[Service]
+Type=simple
+User=u1234567
+Group=u1234567
+WorkingDirectory=/home/u1234567/julliuz-bot
+Environment="PATH=/home/u1234567/julliuz-bot/venv/bin"
+Environment="PYTHONPATH=/home/u1234567/julliuz-bot"
+ExecStart=/home/u1234567/julliuz-bot/venv/bin/python -m app.bot.main
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=julliuz-bot
+
+# Configurações de segurança
+ProtectSystem=full
+ProtectHome=yes
+NoNewPrivileges=yes
+PrivateTmp=yes
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+# Limites de recursos
+LimitNOFILE=65535
+LimitNPROC=65535
+MemoryLimit=512M
+CPUQuota=80%
+
+[Install]
+WantedBy=multi-user.target 
