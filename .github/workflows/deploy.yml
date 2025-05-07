@@ -34,7 +34,8 @@ jobs:
 
       - name: Roda os testes
         env:
-          TELEGRAM_BOT_TOKEN: fake
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
           REDIS_URL: redis://localhost:6379/0
           PYTHONPATH: .
