@@ -7,3 +7,5 @@ def inject_env_vars(monkeypatch):
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "test-token-override")
     monkeypatch.setenv("DATABASE_URL", "sqlite:///memory")
     monkeypatch.setenv("REDIS_URL", "redis://localhost:6379/0")
+    monkeypatch.setenv("LOG_FILE", "logs/test.log")           # 👈 ADICIONAR
+    monkeypatch.setenv("LOG_LEVEL", "DEBUG")                  # 👈 ADICIONAR
