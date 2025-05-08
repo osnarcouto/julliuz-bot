@@ -4,9 +4,9 @@ from email.mime.multipart import MIMEMultipart
 from typing import List, Optional
 
 from app.core.config import settings
-from app.core.logging import setup_logging
+import logging
 
-logger = setup_logging()
+logger = logging.getLogger("julliuz_bot")
 
 def send_email(
     to_email: str,

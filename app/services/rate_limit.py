@@ -2,9 +2,9 @@ from typing import Optional
 from datetime import datetime, timedelta
 
 from app.core.redis import get_redis
-from app.core.logging import setup_logging
+import logging
 
-logger = setup_logging()
+logger = logging.getLogger("julliuz_bot")
 
 class RateLimiter:
     """

@@ -3,10 +3,11 @@ import platform
 from datetime import datetime
 from typing import Dict, Any, Optional
 
-from app.core.logging import setup_logging
 from app.services.email import send_alert_email
 
-logger = setup_logging()
+import logging
+
+logger = logging.getLogger("julliuz_bot")
 
 class SystemMonitor:
     """

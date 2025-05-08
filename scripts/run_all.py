@@ -8,9 +8,9 @@ import signal
 import sys
 from typing import List, Optional
 
-from app.core.logging import setup_logging
+import logging
 
-logger = setup_logging()
+logger = logging.getLogger("julliuz_bot")
 
 class ServiceManager:
     """
