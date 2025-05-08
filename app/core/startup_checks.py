@@ -1,6 +1,6 @@
 import sys
 import subprocess
-from pydantic_settings import ValidationError
+from pydantic import ValidationError
 from app.core.config import get_settings
 import logging
 import os
