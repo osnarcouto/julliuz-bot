@@ -6,9 +6,9 @@ from typing import Dict, List, Any
 import matplotlib.pyplot as plt
 import io
 import base64
-from app.core.logging import setup_logging
+import logging
 
-logger = setup_logging()
+logger = logging.getLogger("julliuz_bot")
 
 def generate_bar_chart(
     data: Dict[str, float],
