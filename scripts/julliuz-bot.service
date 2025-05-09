@@ -4,6 +4,8 @@ After=network.target postgresql.service redis.service
 
 [Service]
 Type=simple
+User=root
+Group=root
 WorkingDirectory=/root/julliuz-bot
 Environment="PATH=/root/julliuz-bot/venv/bin"
 Environment="PYTHONPATH=/root/julliuz-bot"
