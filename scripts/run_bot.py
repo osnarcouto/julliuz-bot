@@ -64,24 +64,22 @@ async def main():
     try:
         # Cria o runner
         runner = BotRunner()
-        
-        # Configura os handlers de sinal
-        signal.signal(signal.SIGINT, runner.handle_signal)
-        signal.signal(signal.SIGTERM, runner.handle_signal)
-        
+
+        # Configura os handlers de sinal usando asyncio
+        loop = asyncio.get_running_loop()
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, lambda: asyncio.create_task(runner.stop()))
+
         # Inicia o bot
         await runner.start()
-        
+
         # Mantém o script rodando
         while runner.running:
             await asyncio.sleep(1)
-            
+
     except Exception as e:
         logger.error(f"Erro na execução do bot: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
-    import asyncio
-    from app.bot.bot import main as bot_main
-
-    asyncio.run(bot_main()) 
+    asyncio.run(main())
