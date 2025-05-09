@@ -40,7 +40,8 @@ class Settings(BaseSettings):
     ENABLE_OCR: bool = False
 
     # Bot configuration
-    BOT_TOKEN: str  # Obrigatório
+    # Use BOT_TOKEN directly from the environment
+    BOT_TOKEN: str
     BOT_USERNAME: str = "julliuz_bot"
     ADMIN_IDS: list[int] = []
 
