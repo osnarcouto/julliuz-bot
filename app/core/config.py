@@ -17,7 +17,10 @@ class Settings(BaseSettings):
     OLLAMA_MODEL: str = "gemma:latest"
 
     # Database
-    DATABASE_URL: str  # Obrigatório
+    DATABASE_URL: str = (
+        f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@"
+        f"{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    )
 
     # Redis
     REDIS_URL: str  # Obrigatório
@@ -42,11 +45,8 @@ class Settings(BaseSettings):
     ADMIN_IDS: list[int] = []
 
     # Database configuration
-    DB_HOST: str = "localhost"
-    DB_PORT: int = 5432
-    DB_NAME: str = "julliuz"
-    DB_USER: str = "postgres"
-    DB_PASSWORD: str = ""
+    # Removed individual database variables (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD)
+    # These are now dynamically constructed into DATABASE_URL
 
     # Redis configuration
     REDIS_HOST: str = "localhost"
