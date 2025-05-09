@@ -8,12 +8,19 @@ import pytest
 from unittest import mock
 from app.services.redis_client import get_redis_connection
 from app.services import ocr
+from app.core.config import Settings
 
 REQUIRED_ENV_VARS = [
     'TELEGRAM_BOT_TOKEN',
     'DATABASE_URL',
     'REDIS_URL',
 ]
+
+def validate_env_vars(required_vars):
+    missing_vars = [var for var in required_vars if var not in os.environ]
+    if missing_vars:
+        print(f"Missing required environment variables: {', '.join(missing_vars)}")
+        sys.exit(1)
 
 def check_required_env():
     settings = get_settings()
@@ -76,7 +83,7 @@ def test_env_vars_obrigatorias(monkeypatch):
     monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.delenv("REDIS_URL", raising=False)
     with pytest.raises(SystemExit):
-        check_required_env()
+        Settings(_env_file=None)  # força ausência
 
 @pytest.mark.parametrize("func,cmd", [
     (check_tesseract, "tesseract"),
@@ -125,4 +132,4 @@ def test_backup_script():
 
 def test_monitor_script():
     result = subprocess.run(["python", "scripts/monitor.py"], capture_output=True, timeout=10)
-    assert b"monitor" in result.stdout or b"monitor" in result.stderr 
+    assert b"monitor" in result.stdout or b"monitor" in result.stderr

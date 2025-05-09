@@ -13,7 +13,10 @@ jobs:
         image: postgres:14
         ports: [5432:5432]
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+
       redis:
         image: redis:7
         ports: [6379:6379]
@@ -21,6 +24,9 @@ jobs:
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
+
+      - name: Instala dependências do sistema
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
 
       - name: Configura Python
         uses: actions/setup-python@v4
@@ -34,13 +40,16 @@ jobs:
 
       - name: Roda os testes
         env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-          REDIS_URL: redis://localhost:6379/0
+          TELEGRAM_BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
           PYTHONPATH: .
         run: pytest tests/
-        
 
       - name: Deploy no servidor via SSH
         uses: appleboy/ssh-action@master

@@ -1,9 +1,9 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
-import os
 from dotenv import load_dotenv
 from pathlib import Path
 from typing import Optional
+import os
 
 load_dotenv()
 
@@ -37,16 +37,16 @@ class Settings(BaseSettings):
     ENABLE_OCR: bool = False
 
     # Bot configuration
-    BOT_TOKEN: str = os.getenv("BOT_TOKEN")
-    BOT_USERNAME: str = os.getenv("BOT_USERNAME", "julliuz_bot")
-    ADMIN_IDS: list[int] = [int(id) for id in os.getenv("ADMIN_IDS", "").split(",") if id]
+    BOT_TOKEN: str  # Obrigatório
+    BOT_USERNAME: str = "julliuz_bot"
+    ADMIN_IDS: list[int] = []
 
     # Database configuration
     DB_HOST: str = "localhost"
     DB_PORT: int = 5432
     DB_NAME: str = "julliuz"
     DB_USER: str = "postgres"
-    DB_PASSWORD: str = ""  # Não obrigatório, mas pode ser
+    DB_PASSWORD: str = ""
 
     # Redis configuration
     REDIS_HOST: str = "localhost"
@@ -59,14 +59,14 @@ class Settings(BaseSettings):
         "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         "date_format": "%Y-%m-%d %H:%M:%S",
         "log_dir": Path("logs"),
-        "max_bytes": 10 * 1024 * 1024,  # 10MB
+        "max_bytes": 10 * 1024 * 1024,
         "backup_count": 5
     }
 
     # Backup configuration
     BACKUP_CONFIG: dict = {
         "enabled": os.getenv("BACKUP_ENABLED", "true").lower() == "true",
-        "schedule": os.getenv("BACKUP_SCHEDULE", "0 0 * * *"),  # Diariamente à meia-noite
+        "schedule": os.getenv("BACKUP_SCHEDULE", "0 0 * * *"),
         "retention_days": int(os.getenv("BACKUP_RETENTION_DAYS", "7")),
         "backup_dir": Path("backups")
     }
@@ -74,7 +74,7 @@ class Settings(BaseSettings):
     # Monitoring configuration
     MONITORING_CONFIG: dict = {
         "enabled": os.getenv("MONITORING_ENABLED", "true").lower() == "true",
-        "interval": int(os.getenv("MONITORING_INTERVAL", "300")),  # 5 minutos
+        "interval": int(os.getenv("MONITORING_INTERVAL", "300")),
         "alert_thresholds": {
             "cpu_percent": float(os.getenv("CPU_ALERT_THRESHOLD", "80.0")),
             "memory_percent": float(os.getenv("MEMORY_ALERT_THRESHOLD", "80.0")),
@@ -121,6 +121,12 @@ class Settings(BaseSettings):
 
 @lru_cache()
 def get_settings() -> Settings:
-    return Settings() 
+    try:
+        return Settings()
+    except Exception as e:
+        raise RuntimeError(
+            f"Falha ao carregar configurações: {e}. "
+            f"Verifique se todas as variáveis obrigatórias estão definidas no ambiente ou no .env."
+        )
 
-settings =Settings
+settings = get_settings()

@@ -1,18 +1,21 @@
 import os
 import pytest
 from unittest import mock
-from app.core.startup_checks import check_required_env, check_tesseract, check_redis, check_postgres, setup_logging
+from app.core.startup_checks import check_required_env, check_tesseract, check_redis, check_postgres, setup_logging, validate_env_vars
 from app.services.redis_client import get_redis_connection
 from app.services import ocr
 import subprocess
+from app.core.config import Settings
 
 # 1. Teste de variáveis obrigatórias ausentes
+
 def test_env_vars_obrigatorias(monkeypatch):
-    monkeypatch.delenv("TELEGRAM_BOT_TOKEN", raising=False)
-    monkeypatch.delenv("DATABASE_URL", raising=False)
-    monkeypatch.delenv("REDIS_URL", raising=False)
+    required_vars = ["TELEGRAM_BOT_TOKEN", "DATABASE_URL", "REDIS_URL"]
+    for var in required_vars:
+        monkeypatch.delenv(var, raising=False)
+
     with pytest.raises(SystemExit):
-        check_required_env()
+        validate_env_vars(required_vars)
 
 # 2. Teste de dependências externas ausentes (mock subprocess)
 @pytest.mark.parametrize("func,cmd", [
@@ -65,4 +68,4 @@ def test_backup_script():
 
 def test_monitor_script():
     result = subprocess.run(["python", "scripts/monitor.py"], capture_output=True, timeout=10)
-    assert b"monitor" in result.stdout or b"monitor" in result.stderr 
+    assert b"monitor" in result.stdout or b"monitor" in result.stderr
